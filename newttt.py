@@ -16,18 +16,89 @@ def game_type():
   elif play == "b":
     comp_vs_human()
   elif play == "c":
-      computer_vs_computer
+      computer_vs_computer()
   else:
     os.system("clear")
     print "Not an option. Choose: a,b or c"
     game_type()
 
+def example_board():
+
+  board = " 1 | 2 | 3 \n-----------\n 4 | 5 | 6 \n-----------\n 7 | 8 | 9"
+  return board
+
+def game_board(board):
+  return " "+board[1]+" | "+board[2]+" | "+board[3]+" \n-----------\n "+board[4]+" | "+ board[5] +" | "+board[6]+"\n-----------\n "+board[7]+" | "+board[8]+" | "+board[9]+" "
+
+def players():
+  answer = raw_input()
+  if answer.upper() == "X":
+    player1 = 'X'
+    player2 = "O"
+    return player1, player2
+  elif answer.upper() == "O":
+    player1 = 'O'
+    print player1
+    player2 = "X"
+    print player2
+    return player1, player2
+  else:
+    raise ValueError("X or O please.")
+
+def play_again():
+    print "Do you want to play again? (y/n)"
+    answer = raw_input()
+    if answer == "y":
+        os.system("clear")
+        game_type()
+    elif answer == "n":
+        exit()
+    else:
+        print "Not WURKING"
+        play_again()
+
+def win(b,p):
+
+    if (b[1] == p and b[2] == p and b[3] == p) or \
+        (b[4] == p and b[5] == p and b[6] == p) or \
+  (b[7] == p and b[8] == p and b[9] == p) or \
+  (b[1] == p and b[4] == p and b[7] == p) or \
+  (b[2] == p and b[5] == p and b[8] == p) or \
+  (b[3] == p and b[6] == p and b[9] == p) or \
+  (b[3] == p and b[5] == p and b[7] == p) or \
+  (b[1] == p and b[5] == p and b[9] == p):
+        return True
+    else:
+        return False
+
+def check_full_x(b,choice):
+
+    if b[choice] == " ":
+        b[choice] = "X"
+        return True
+    else:
+        print "Sorry, space full. Try again."
+        return False
+
+
+def check_full_o(b,choice):
+
+    if b[choice] == " ":
+        b[choice] = "O"
+        return True
+    else:
+        print "Sorry, space taken. Try again."
+        return False
+
+def test_win(b,p,v):
+    old_val = b[v]
+    b[v] = p
+    is_win = win(b,p)
+    b[v] = old_val
+    return is_win
+
+
 def intro():
-  playing = True
-  board = [""," "," "," "," "," "," "," "," "," "]
-  b = board
-
-
   print """
   Instructions: Choose any number, 1-9, that has
   not yet been used by the other player.
@@ -37,101 +108,15 @@ def intro():
   horizontally, vertically or diagonally.
   \n"""
 
-  def example_board():
-
-      board = " 1 | 2 | 3 \n-----------\n 4 | 5 | 6 \n-----------\n 7 | 8 | 9"
-      return board
-
   sleep(1)
-
-
-  def game_board():
-      return " "+b[1]+" | "+b[2]+" | "+b[3]+" \n-----------\n "+b[4]+" | "+ b[5] +" | "+b[6]+"\n-----------\n "+b[7]+" | "+b[8]+" | "+b[9]+" "
-
-  def players():
-    answer = raw_input()
-    if answer.upper() == "X":
-      player1 = 'X'
-      player2 = "O"
-      return player1, player2
-    elif answer.upper() == "O":
-      player1 = 'O'
-      print player1
-      player2 = "X"
-      print player2
-      return player1, player2
-    else:
-      raise ValueError("X or O please.")
-
-  def check_full_x():
-
-      if b[choice] == " ":
-          b[choice] = "X"
-          return True
-      else:
-          print "Sorry, space full. Try again."
-          return False
-
-
-  def check_full_o():
-
-      if b[choice] == " ":
-          b[choice] = "O"
-          return True
-      else:
-          print "Sorry, space taken. Try again."
-          return False
-  def play_again():
-      print "Do you want to play again? (y/n)"
-      answer = raw_input()
-      if answer == "y":
-          os.system("clear")
-          game_type()
-      elif answer == "n":
-          exit()
-      else:
-          print "Not WURKING"
-          play_again()
-
-
-  def win(b,p):
-
-      if (b[1] == p and b[2] == p and b[3] == p) or \
-          (b[4] == p and b[5] == p and b[6] == p) or \
-  	(b[7] == p and b[8] == p and b[9] == p) or \
-  	(b[1] == p and b[4] == p and b[7] == p) or \
-  	(b[2] == p and b[5] == p and b[8] == p) or \
-  	(b[3] == p and b[6] == p and b[9] == p) or \
-  	(b[3] == p and b[5] == p and b[7] == p) or \
-  	(b[1] == p and b[5] == p and b[9] == p):
-          return True
-      else:
-          return False
-  return players, play_again#, win, example_board, game_board, check_full_x, check_full_o
-
-
 
 def human_game():
 
   playing = True
   board = [""," "," "," "," "," "," "," "," "," "]
   b = board
-
-  #example_board, game_board = intro()
-  def example_board():
-
-      board = " 1 | 2 | 3 \n-----------\n 4 | 5 | 6 \n-----------\n 7 | 8 | 9"
-      return board
-
   sleep(1)
-
-
-  def game_board():
-      return " "+b[1]+" | "+b[2]+" | "+b[3]+" \n-----------\n "+b[4]+" | "+ b[5] +" | "+b[6]+"\n-----------\n "+b[7]+" | "+b[8]+" | "+b[9]+" "
-
-
-  #players, win, example_board, game_board, check_full_x, check_full_o = intro()
-  players, play_again = intro()
+  intro()
 
   print "\n"
   print "Quick! You  two have 5 seconds to decide who will be Player 1"
@@ -142,55 +127,21 @@ def human_game():
   player1, player2 = players()
 
 
-  def check_full_x():
-
-      if b[choice] == " ":
-          b[choice] = "X"
-          return True
-      else:
-          print "Sorry, space full. Try again."
-          return False
-
-
-  def check_full_o():
-
-      if b[choice] == " ":
-          b[choice] = "O"
-          return True
-      else:
-          print "Sorry, space taken. Try again."
-          return False
-  def win(b,p):
-
-      if (b[1] == p and b[2] == p and b[3] == p) or \
-          (b[4] == p and b[5] == p and b[6] == p) or \
-  	(b[7] == p and b[8] == p and b[9] == p) or \
-  	(b[1] == p and b[4] == p and b[7] == p) or \
-  	(b[2] == p and b[5] == p and b[8] == p) or \
-  	(b[3] == p and b[6] == p and b[9] == p) or \
-  	(b[3] == p and b[5] == p and b[7] == p) or \
-  	(b[1] == p and b[5] == p and b[9] == p):
-          return True
-      else:
-          return False
-
-
-
   while playing:
       os.system("clear")
 
       print "\n"
       print example_board()
       print "The numbers above represent the spaces you want your letters to be."
-      print game_board()
+      print game_board(b)
       print "Player 1"
       choice = int(raw_input("What is your number 1-9?"))
       if player1 == "X":
-        while not check_full_x():
+        while not check_full_x(b, choice):
             choice = int(raw_input("Please choose an empty space for X. "))
             #print choice
       else:
-        while not check_full_o():
+        while not check_full_o(b,choice):
           choice = int(raw_input("Please choose an empty space for O. "))
 
 
@@ -198,14 +149,14 @@ def human_game():
       os.system("clear")
       print example_board()
       print "The numbers above represent the spaces you want your letters to be."
-      print game_board()
+      print game_board(b)
 
       #X's win
       if win(b, "X"):
-  	    os.system("clear")
-  	    print game_board()
-  	    print "X won the game! Too bad O."
-  	    play_again()
+        os.system("clear")
+        print game_board(b)
+        print "X won the game! Too bad O."
+        play_again()
 
       # If there is a tie
       full = True
@@ -220,20 +171,20 @@ def human_game():
       print "Player 2's turn."
       choice = int(raw_input("What is your number 1-9?"))
       if player2 == "X":
-        while not check_full_x():
+        while not check_full_x(b,choice):
             choice = int(raw_input("Please choose an empty space for X. "))
-            #print choice
+            print choice
       else:
-        while not check_full_o():
+        while not check_full_o(b,choice):
           choice = int(raw_input("Please choose an empty space for O. "))
 
 
 
       if win(b, "O"):
           os.system("clear")
-          print game_board()
+          print game_board(b)
           print "O wins! Congratulations! Sorry X."
-          #print "GAME OVER."
+          print "GAME OVER."
           break
 
 
@@ -242,58 +193,8 @@ def comp_vs_human():
   playing = True
   board = [""," "," "," "," "," "," "," "," "," "]
   b = board
-  players,play_again = intro()
-
-  #example_board, game_board = intro()
-  def example_board():
-
-      board = " 1 | 2 | 3 \n-----------\n 4 | 5 | 6 \n-----------\n 7 | 8 | 9"
-      return board
-
+  intro()
   sleep(1)
-
-
-  def game_board():
-      return " "+b[1]+" | "+b[2]+" | "+b[3]+" \n-----------\n "+b[4]+" | "+ b[5] +" | "+b[6]+"\n-----------\n "+b[7]+" | "+b[8]+" | "+b[9]+" "
-  def check_full_x():
-
-      if b[choice] == " ":
-          b[choice] = "X"
-          return True
-      else:
-          print "Sorry, space full. Try again."
-          return False
-
-
-  def check_full_o():
-
-      if b[choice] == " ":
-          b[choice] = "O"
-          return True
-      else:
-          print "Sorry, space taken. Try again."
-          return False
-  def win(b,p):
-
-      if (b[1] == p and b[2] == p and b[3] == p) or \
-          (b[4] == p and b[5] == p and b[6] == p) or \
-  	(b[7] == p and b[8] == p and b[9] == p) or \
-  	(b[1] == p and b[4] == p and b[7] == p) or \
-  	(b[2] == p and b[5] == p and b[8] == p) or \
-  	(b[3] == p and b[6] == p and b[9] == p) or \
-  	(b[3] == p and b[5] == p and b[7] == p) or \
-  	(b[1] == p and b[5] == p and b[9] == p):
-          return True
-      else:
-          return False
-
-  def test_win(b,p,v):
-      old_val = b[v]
-      b[v] = p
-      is_win = win(b,p)
-      b[v] = old_val
-      return is_win
-
 
   def computer_turn(b,p):
     #check computer win move
@@ -318,6 +219,8 @@ def comp_vs_human():
         if b[i] == ' ':
             return i
 
+
+
   print "Human, would you like to go first or second? (1/2)"
 
   if raw_input() == "1":
@@ -329,15 +232,16 @@ def comp_vs_human():
       print "\n"
       print example_board()
       print "The numbers above represent the spaces you want your letters to be."
-      print game_board()
+      print game_board(b)
       print "Human"
+      computer2 = player1
       choice = int(raw_input("What is your number 1-9?"))
       if player1 == "X":
-        while not check_full_x():
+        while not check_full_x(b,choice):
             choice = int(raw_input("Please choose an empty space for X. "))
             #print choice
       else:
-        while not check_full_o():
+        while not check_full_o(b,choice):
           choice = int(raw_input("Please choose an empty space for O. "))
 
 
@@ -345,14 +249,13 @@ def comp_vs_human():
       os.system("clear")
       print example_board()
       print "The numbers above represent the spaces you want your letters to be."
-      print game_board()
+      print game_board(b)
 
       #X's win
-      if win(b, "X"):
-  	    os.system("clear")
-  	    print game_board()
-  	    print "X won the game! Too bad O."
-        #print "A place holder"
+      if win(b, player1):
+        os.system("clear")
+        print game_board(b)
+        print "X won the game! Too bad O."
         print play_again()
       # If there is a tie
       full = True
@@ -366,30 +269,25 @@ def comp_vs_human():
 
 
       print "Computer's turn."
-      computer = player2
-      if computer == "X":
-        while not check_full_x():
+      computer1 = player2
+      if computer1 == "X":
+        choice = computer_turn(b,"X")
+        while not check_full_x(b,choice):
             choice = computer_turn(b,"X")
         print choice
-        if win(b,"X"):
-            break
-            #print choice
       else:
-        while not check_full_o():
+        choice = computer_turn(b,"O")
+        while not check_full_o(b,choice):
           choice = computer_turn(b,"O")
         print choice
-        if win(b,"O"):
-            break
 
-
-
-      if win(b, "O"):
+      if win(b, player2):
           os.system("clear")
-          print game_board()
+          print game_board(b)
           print "O wins! Congratulations! Sorry X."
           play_again()
-          #print "GAME OVER."
-          break
+          print "GAME OVER."
+          play_again()
 
   if raw_input() == "2":
 
@@ -401,6 +299,10 @@ def comp_vs_human():
     comp_vs_human()
 
 def computer_vs_computer():
+    playing = True
+    board = [""," "," "," "," "," "," "," "," "," "]
+    b = board
     intro()
+    sleep(1)
 
 game_type()
