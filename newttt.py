@@ -74,6 +74,7 @@ def win(b,p):
 def check_full_x(b,choice):
 
     if b[choice] == " ":
+        sleep(1)
         b[choice] = "X"
         return True
     else:
@@ -84,6 +85,7 @@ def check_full_x(b,choice):
 def check_full_o(b,choice):
 
     if b[choice] == " ":
+        sleep(1)
         b[choice] = "O"
         return True
     else:
@@ -96,6 +98,7 @@ def test_win(b,p,v):
     is_win = win(b,p)
     b[v] = old_val
     return is_win
+
 
 
 def intro():
@@ -200,7 +203,6 @@ def comp_vs_human():
     #check computer win move
     for v in range(1,10):
          if b[v] == " " and test_win(b, player2, v):
-            #b[v] = p
             return v
 
     # Check player win moves
@@ -234,7 +236,6 @@ def comp_vs_human():
       print "The numbers above represent the spaces you want your letters to be."
       print game_board(b)
       print "Human"
-      computer2 = player1
       choice = int(raw_input("What is your number 1-9?"))
       if player1 == "X":
         while not check_full_x(b,choice):
@@ -255,7 +256,7 @@ def comp_vs_human():
       if win(b, player1):
         os.system("clear")
         print game_board(b)
-        print "X won the game! Too bad O."
+        print "%s won the game! Too bad %s." % (player1, player2)
         print play_again()
       # If there is a tie
       full = True
@@ -269,8 +270,8 @@ def comp_vs_human():
 
 
       print "Computer's turn."
-      computer1 = player2
-      if computer1 == "X":
+      computer = player2
+      if computer == "X":
         choice = computer_turn(b,"X")
         while not check_full_x(b,choice):
             choice = computer_turn(b,"X")
@@ -284,7 +285,7 @@ def comp_vs_human():
       if win(b, player2):
           os.system("clear")
           print game_board(b)
-          print "O wins! Congratulations! Sorry X."
+          print "%s wins! Congratulations! Sorry %s." % (player2, player1)
           play_again()
           print "GAME OVER."
           play_again()
@@ -302,7 +303,88 @@ def computer_vs_computer():
     playing = True
     board = [""," "," "," "," "," "," "," "," "," "]
     b = board
-    intro()
+    print "Computer1 versus Computer2"
+    print "Computer1 will be X"
+    print "Computer2 will be O"
     sleep(1)
+    os.system("clear")
+    print "\n"
+    print "Let the battle begin"
+    sleep(1)
+    computer1 = "X"
+    computer2 = "O"
+
+    def computer_moves(b,p):
+      #check computer2 win move
+      for v in range(1,10):
+           if b[v] == " " and test_win(b, play1, v):
+              #b[v] = p
+              return v
+
+      # Check computer1 win moves
+      for i in range(1,10):
+          if b[i] == ' ' and test_win(b,play2, i):
+              return i
+      # Play a corner
+      for i in [1, 3, 7, 9]:
+          if b[i] == ' ':
+              return i
+      # Play center
+      if b[5] == ' ':
+          return 5
+      #Play a side
+      for i in [4, 2, 8, 6]:
+          if b[i] == ' ':
+              return i
+
+    while playing:
+      os.system("clear")
+
+      print "\n"
+      print example_board()
+      print "The numbers above represent the spaces you want your letters to be."
+      print game_board(b)
+      print "Computer 1"
+      play2 = computer1
+      play1 = computer2
+      choice = computer_moves(b,"X")
+      while not check_full_x(b,choice):
+        choice = computer_moves(b,"X")
+        print "Choosing",choice
+
+      os.system("clear")
+      print example_board()
+      print "The numbers above represent the spaces you want your letters to be."
+      print game_board(b)
+
+      #X's win
+      if win(b, computer1):
+        os.system("clear")
+        print game_board(b)
+        print "%s won the game! Too bad %s." % (computer1, computer2)
+        exit()
+      # If there is a tie
+      full = True
+      if " " in b:
+        full = False
+
+      if full:
+          print "Both of you lost -_-"
+          exit()
+
+      print "Computer's turn."
+      play1 = computer1
+      play2 = computer2
+      choice = computer_moves(b,"O")
+      while not check_full_o(b,choice):
+        choice = computer_moves(b,"O")
+        print choice
+
+      if win(b, computer2):
+          os.system("clear")
+          print game_board(b)
+          print "%s wins! Congratulations! Sorry %s." % (computer2, computer1)
+          print "GAME OVER."
+          exit()
 
 game_type()
