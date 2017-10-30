@@ -54,11 +54,11 @@ def play_again():
     elif answer == "n":
         exit()
     else:
-        print "Not WURKING"
+        print "NOT WORKING"
         play_again()
 
 def win(b,p):
-
+    # All possible wins
     if (b[1] == p and b[2] == p and b[3] == p) or \
         (b[4] == p and b[5] == p and b[6] == p) or \
   (b[7] == p and b[8] == p and b[9] == p) or \
@@ -93,12 +93,20 @@ def check_full_o(b,choice):
         return False
 
 def test_win(b,p,v):
+    # Checks to see if a win is possible
     old_val = b[v]
     b[v] = p
     is_win = win(b,p)
     b[v] = old_val
     return is_win
 
+def test_fork(b,p,v):
+    # checks if a move opens up a fork
+    winningMoves = 0
+    for v in range(0, 9):
+        if test_win(b, p, v) and b[v] == ' ':
+            winningMoves += 1
+    return winningMoves >= 2
 
 
 def intro():
@@ -123,7 +131,7 @@ def human_game():
 
   print "\n"
   print "Quick! You  two have 5 seconds to decide who will be Player 1"
-  sleep(1)
+  sleep(5)
   print "\n"
   print "Player 1, would you like to be X or O? "
   print "\n"
@@ -142,7 +150,7 @@ def human_game():
       if player1 == "X":
         while not check_full_x(b, choice):
             choice = int(raw_input("Please choose an empty space for X. "))
-            #print choice
+
       else:
         while not check_full_o(b,choice):
           choice = int(raw_input("Please choose an empty space for O. "))
@@ -168,7 +176,7 @@ def human_game():
 
       if full:
           print "Both of you lost -_-"
-          break
+          play_again()
 
 
       print "Player 2's turn."
@@ -180,6 +188,7 @@ def human_game():
       else:
         while not check_full_o(b,choice):
           choice = int(raw_input("Please choose an empty space for O. "))
+          print choice
 
 
 
@@ -188,7 +197,7 @@ def human_game():
           print game_board(b)
           print "O wins! Congratulations! Sorry X."
           print "GAME OVER."
-          break
+          play_again()
 
 
 def comp_vs_human():
@@ -203,31 +212,55 @@ def comp_vs_human():
     #check computer win move
     for v in range(1,10):
          if b[v] == " " and test_win(b, player2, v):
+            print "Choosing space ", v
+            sleep(1)
             return v
 
     # Check player win moves
     for i in range(1,10):
         if b[i] == ' ' and test_win(b,player1, i):
+            print "Choosing space ", i
+            sleep(1)
             return i
-    # Play a corner
-    for i in [1, 3, 7, 9]:
-        if b[i] == ' ':
+    # Check computer fork opportunities
+    for i in range(1, 10):
+        if b[i] == ' ' and test_fork(b, player2, i):
+            print "Choosing space ", i
+            sleep(1)
+            return i
+    #  Check player fork opportunities
+    for i in range(1, 10):
+        if b[i] == ' ' and test_fork(b, player1, i):
+            print "Choosing space ", i
+            sleep(1)
             return i
     # Play center
     if b[5] == ' ':
+        print "Choosing space 5"
+        sleep(1)
         return 5
+
+    # Play a corner
+    for i in [1, 3, 7, 9]:
+        if b[i] == ' ':
+            print "Choosing space ", i
+            sleep(1)
+            return i
     #Play a side
     for i in [4, 2, 8, 6]:
         if b[i] == ' ':
+            print "Choosing space ", i
+            sleep(1)
             return i
 
 
 
   print "Human, would you like to go first or second? (1/2)"
-
-  if raw_input() == "1":
+  first_or_second = raw_input()
+  if first_or_second == "1":
     print "Would you like to be X or O?"
     player1, player2 = players()
+
     while playing:
       os.system("clear")
 
@@ -240,12 +273,10 @@ def comp_vs_human():
       if player1 == "X":
         while not check_full_x(b,choice):
             choice = int(raw_input("Please choose an empty space for X. "))
-            #print choice
+
       else:
         while not check_full_o(b,choice):
           choice = int(raw_input("Please choose an empty space for O. "))
-
-
 
       os.system("clear")
       print example_board()
@@ -290,11 +321,67 @@ def comp_vs_human():
           print "GAME OVER."
           play_again()
 
-  if raw_input() == "2":
+  if first_or_second == "2":
 
     print "Would you like to be X or O?"
     player1, player2 = players()
+    while playing:
+      os.system("clear")
 
+      print "\n"
+      print example_board()
+      print "The numbers above represent the spaces you want your letters to be."
+      print game_board(b)
+
+      print "Computer's turn."
+      computer = player2
+      if computer == "X":
+        choice = computer_turn(b,"X")
+        while not check_full_x(b,choice):
+            choice = computer_turn(b,"X")
+        print choice
+      else:
+        choice = computer_turn(b,"O")
+        while not check_full_o(b,choice):
+          choice = computer_turn(b,"O")
+        print choice
+
+      if win(b, player2):
+          os.system("clear")
+          print game_board(b)
+          print "%s wins! Congratulations! Sorry %s." % (player2, player1)
+          play_again()
+          print "GAME OVER."
+          play_again()
+
+      os.system("clear")
+      print example_board()
+      print "The numbers above represent the spaces you want your letters to be."
+      print game_board(b)
+
+      choice = int(raw_input("What is your number 1-9?"))
+      if player1 == "X":
+        while not check_full_x(b,choice):
+            choice = int(raw_input("Please choose an empty space for X. "))
+      else:
+        while not check_full_o(b,choice):
+          choice = int(raw_input("Please choose an empty space for O. "))
+
+      #X's win
+      if win(b, player1):
+        os.system("clear")
+        print game_board(b)
+        print "%s won the game! Too bad %s." % (player1, player2)
+        print play_again()
+      # If there is a tie
+      full = True
+      if " " in b:
+        full = False
+
+      if full:
+          print "Both of you lost -_-"
+          play_again()
+          break
   else:
     print "Not option"
     comp_vs_human()
@@ -314,28 +401,53 @@ def computer_vs_computer():
     computer1 = "X"
     computer2 = "O"
 
+
     def computer_moves(b,p):
-      #check computer2 win move
+      #check computer win move
       for v in range(1,10):
            if b[v] == " " and test_win(b, play1, v):
-              #b[v] = p
+              print "Choosing space ", v
+              sleep(1)
               return v
 
       # Check computer1 win moves
       for i in range(1,10):
           if b[i] == ' ' and test_win(b,play2, i):
+              print "Choosing space ", i
+              sleep(1)
               return i
-      # Play a corner
-      for i in [1, 3, 7, 9]:
-          if b[i] == ' ':
+      # Check computer fork opportunities
+      for i in range(1, 10):
+          if b[i] == ' ' and test_fork(b, play1, i):
+              print "Choosing space ", i
+              sleep(1)
+              return
+
+      #  Check computer fork opportunities
+      for i in range(1, 10):
+          if b[i] == ' ' and test_fork(b, play2, i):
+              print "Choosing space ", i
+              sleep(1)
               return i
       # Play center
       if b[5] == ' ':
+          print "Choosing space 5"
+          sleep(1)
           return 5
+
+      # Play a corner
+      for i in [1, 3, 7, 9]:
+          if b[i] == ' ':
+              print "Choosing space ", i
+              sleep(1)
+              return i
       #Play a side
       for i in [4, 2, 8, 6]:
           if b[i] == ' ':
+              print "Choosing space ", i
+              sleep(1)
               return i
+
 
     while playing:
       os.system("clear")
@@ -350,7 +462,6 @@ def computer_vs_computer():
       choice = computer_moves(b,"X")
       while not check_full_x(b,choice):
         choice = computer_moves(b,"X")
-        print "Choosing",choice
 
       os.system("clear")
       print example_board()
@@ -372,13 +483,12 @@ def computer_vs_computer():
           print "Both of you lost -_-"
           exit()
 
-      print "Computer's turn."
+      print "Computer 2's turn."
       play1 = computer1
       play2 = computer2
       choice = computer_moves(b,"O")
       while not check_full_o(b,choice):
         choice = computer_moves(b,"O")
-        print choice
 
       if win(b, computer2):
           os.system("clear")
@@ -387,4 +497,5 @@ def computer_vs_computer():
           print "GAME OVER."
           exit()
 
-game_type()
+if __name__ == "__main__":
+    game_type()
